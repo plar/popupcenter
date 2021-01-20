@@ -7,25 +7,61 @@ function popupWindow(url, title, w, h) {
     const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
     const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
 
-    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+    const width = window.innerWidth ? window.innerWidth : (document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width);
+    const height = window.innerHeight ? window.innerHeight : (document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height);
 
     const left = dualScreenLeft + ((width - w) / 2)
     const top = dualScreenTop + ((height - h) / 2)
-    const newWindow = window.open(url, title, 
-      `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, 
-      width=${w}, height=${h}, top=${top}, left=${left}`)
+    console.log(`popup top=${top}, left=${left}, w=${w}, h=${h}, dsl=${dualScreenLeft}, dst=${dualScreenTop}, ww=%{width}, wh=${height}`)
+    const newWindow = window.open(url, title, `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,copyhistory=no,width=${w},height=${h},top=${top},left=${left}`)
 
-    if (window.focus) newWindow.focus()
+    if (window.focus) { 
+        newWindow.focus() 
+    }
 }
+    
+function popupWindow2(url, title, w, h) {
+    const userAgent = navigator.userAgent,
+        mobile = function() {
+          return /\b(iPhone|iP[ao]d)/.test(userAgent) ||
+            /\b(iP[ao]d)/.test(userAgent) ||
+            /Android/i.test(userAgent) ||
+            /Mobile/i.test(userAgent);
+        },
+        screenX = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+        screenY = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+        outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.documentElement.clientWidth,
+        outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : document.documentElement.clientHeight - 22,
+        targetWidth = mobile() ? 0 : w,
+        targetHeight = mobile() ? 0 : h,
+        V = screenX < 0 ? window.screen.width + screenX : screenX,
+        left = parseInt(V + (outerWidth - targetWidth) / 2, 10),
+        top = parseInt(screenY + (outerHeight - targetHeight) / 2.5, 10),
+        features = [];
+
+    features.push('scrollbars=1');
+    features.push('left=' + left);
+    features.push('top=' + top);
+    if (targetWidth !== 0) { features.push('width=' + targetWidth); }
+    if (targetHeight !== 0) { features.push('height=' + targetHeight); }
+  
+    var newWindow = window.open(url, title, features.join(','))
+    if (window.focus) {
+      newWindow.focus()
+    }
+  
+    return newWindow;
+}
+    
 </script>
 </head>
 <body>
 
 <h1>Popup Center</h1>
 <p id="demo">Show popup at the center</p>
-<button type="button" onclick='popupWindow("http://www.google.com", "google.com", 500, 500);'>Popup Window</button>
 
+<button type="button" onclick='popupWindow("http://www.google.com", "google.com", 500, 500);'>Popup Window v1</button>
+<button type="button" onclick='popupWindow2("http://www.google.com", "google.com", 500, 500);'>Popup Window v2</button>
 
 </body>
 </html>
