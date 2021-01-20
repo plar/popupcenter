@@ -10,8 +10,8 @@ function popupWindow(url, title, w, h) {
     const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
     const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-    const left = (width - w) / 2 / dualScreenLeft
-    const top = (height - h) / 2 / dualScreenTop
+    const left = dualScreenLeft + ((width - w) / 2)
+    const top = dualScreenTop + ((height - h) / 2)
     const newWindow = window.open(url, title, 
       `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, 
       width=${w}, height=${h}, top=${top}, left=${left}`)
