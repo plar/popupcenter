@@ -30,7 +30,7 @@ function popupWindow(url, title, w, h) {
     if (targetHeight !== 0) { features.push('height=' + targetHeight); }
   
     var nwin = window.open(url, title, features.join(','))
-    if (window.focus && ) {
+    if (window.focus && nwin) {
       nwin.moveTo(left, top)
       nwin.focus()
     }
